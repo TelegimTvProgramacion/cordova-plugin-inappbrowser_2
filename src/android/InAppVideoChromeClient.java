@@ -78,6 +78,7 @@ public class InAppVideoChromeClient extends InAppChromeClient {
             originalOrientation = activity.getRequestedOrientation();
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             holder.setVisibility(View.VISIBLE);
+            InAppBrowser.hideToolbar();
         }
 
         private void resetValues() {
@@ -87,6 +88,7 @@ public class InAppVideoChromeClient extends InAppChromeClient {
             customView = null;
             customViewCallback = null;
             holder.setVisibility(View.INVISIBLE);
+            InAppBrowser.showToolbar();
         }
 
         public void onHideCustomView() {
