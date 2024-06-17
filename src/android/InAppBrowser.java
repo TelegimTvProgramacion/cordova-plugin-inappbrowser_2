@@ -44,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.WindowInsets;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -159,6 +160,8 @@ public class InAppBrowser extends CordovaPlugin {
     private boolean useVideoFullScreen = false;
     private FullscreenHolder fullscreenHolder;
     private InAppVideoChromeClient.InAppVideoFullScreenHelper videoHelper;
+
+    private static RelativeLayout publicToolbar;
 
     /**
      * Executes the request and returns PluginResult.
@@ -811,10 +814,7 @@ public class InAppBrowser extends CordovaPlugin {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 if (fullscreen) {
                     dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                     //Fix for fullscreen 
-                     dialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-                     // This constant was deprecated in API level 30.
-                     // Use WindowInsets#getInsetsIgnoringVisibility(int) instead to retrieve insets that don't change when system bars change visibility state. "
+                    dialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 }
                 dialog.setCancelable(true);
                 dialog.setInAppBroswer(getInAppBrowser());
@@ -835,6 +835,8 @@ public class InAppBrowser extends CordovaPlugin {
                     toolbar.setHorizontalGravity(Gravity.RIGHT);
                 }
                 toolbar.setVerticalGravity(Gravity.TOP);
+
+                publicToolbar = toolbar;
 
                 // Action Button Container layout
                 RelativeLayout actionButtonContainer = new RelativeLayout(cordova.getActivity());
@@ -952,7 +954,7 @@ public class InAppBrowser extends CordovaPlugin {
                         return true;
                     }
                 });
-                // if useVideoFullScreen  
+                // if useVideoFullScreen
                 if (useVideoFullScreen) {
                     // init holder
                     fullscreenHolder = new FullscreenHolder(cordova.getContext());
@@ -1079,6 +1081,20 @@ public class InAppBrowser extends CordovaPlugin {
         };
         this.cordova.getActivity().runOnUiThread(runnable);
         return "";
+    }
+
+    /**
+     * Hide the toolbar
+     */
+    public static void hideToolbar(){
+        publicToolbar.setVisibility(View.GONE);
+    }
+
+    /**
+     * Show the toolbar
+     */
+    public static void showToolbar(){
+        publicToolbar.setVisibility(View.VISIBLE);
     }
 
     /**
